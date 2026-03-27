@@ -1,4 +1,6 @@
-Portabilité : À partir d'une image je peux instancier plusieurs conteneurs. C'est la portabilité.
-L'isolation : Chaque conteneur va utiliser ses propres ressources. Contrairement à une virtualisation lourde, on peut étendre l'espace mémoire.
-La chose la plus importante c'est le démarrage rapide. Pour démarrer la machine virtuelle c'est quelques minutes, pour lancer un conteneur c'est quelques secondes.
-Faciliter l'automatisation : 
+-Portabilité : À partir d'une image je peux instancier plusieurs conteneurs. C'est la portabilité.
+-L'isolation : Chaque conteneur va utiliser ses propres ressources. Contrairement à une virtualisation lourde, on peut étendre l'espace mémoire.
+-Démarrage rapide : Pour démarrer la machine virtuelle c'est quelques minutes, pour lancer un conteneur c'est quelques secondes.
+-Faciliter l'automatisation : 
+-Coût réduit : C'est lié à la légèreté. Moins de ressources matérielles sont nécessaires pour 
+-Compatibilité avec le Cloud : 
