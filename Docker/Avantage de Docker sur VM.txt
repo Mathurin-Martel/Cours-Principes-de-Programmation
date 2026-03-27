@@ -4,3 +4,5 @@
 -Faciliter l'automatisation : 
 -Coût réduit : C'est lié à la légèreté. Moins de ressources matérielles sont nécessaires pour 
 -Compatibilité avec le Cloud : 
+
+LXC : Voir ce que ca veut dire.
