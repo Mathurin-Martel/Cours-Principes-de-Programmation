@@ -6,3 +6,9 @@
 -Compatibilité avec le Cloud : 
 
 LXC : Voir ce que ca veut dire.
+
+Une image contient le programme ainsi que l'environnement pouvant le faire tourner.
+
+Terminal :
+docker images : Listes les images sous forme de tableaux avec les colonnes suivantes : IMAGE, ID, DISK USAGE, CONTENT SIZE, EXTRA
+docker ps : Listes les conteneurs sous forme de tableaux avec les colonnes suivantes : CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS, PORTS, NAMES
