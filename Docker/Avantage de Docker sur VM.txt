@@ -37,13 +37,13 @@ docker run -d -p 8080:80 [--name monServeur] nginx. Lance une page internet sur 
 -p : port
 8080:80 = ma_machine:conteneur
 
-docker exec -it monServeur bash sert a lancer le conteneur ou se trouve index.html
+docker exec -it monServeur bash sert à lancer le conteneur où se trouve index.html
 Pour installer nano dessus, impossible de faire apk add --no -cache nano car il ne connait pas apk. Il faut faire apt update puis apt install nano.
 
-Si on fait exit sur ce conteneur ca ne stoppe pas la page internet. Il faut faire docker stop NOM_DU_CONTENEUR.
-Si on relance le conteneur les modifications reste.
+Si on fait exit sur ce conteneur ça ne stoppe pas la page internet. Il faut faire docker stop NOM_DU_CONTENEUR.
+Si on relance le conteneur, les modifications restent.
 
-La raison c'est que quand on run une image ca crée un NOUVEAU conteneur a partir de cette image mais si on run un CONTENEUR alors ca garde les modifications.
+La raison c'est que quand on run une image ça crée un NOUVEAU conteneur à partir de cette image mais si on run un CONTENEUR alors ça garde les modifications.
 
 Docker propose 3 types principaux :
 A.Bind mounts (montages liés)
@@ -61,11 +61,21 @@ Stockés dans /var/lib/docker/volumes/
 Indépendants du système hôte.
 Plus sûrs et facilement sauvegardables.
 docker volume create monvolume
-docker run-v monvolume:/chemin/image
+docker run -v monvolume:/chemin/image
 
 C.tmpfs (mémoire uniquement -Linux)
 Stockage temporaire uniquement en RAM
 Rapidité
 Aucune trace sur le disque
 Données perdues au redémarrage
-docker run -tmpfs /vhemin image
+docker run -tmpfs /chemin image
+
+docker volume ls : Liste les volumes
+docker volume inspect monvolume : Affiche un json contenant des informations sur monvolume
+docker volume rm monvolume : : Efface monvolume
+
+docker run -it -v monvolume:/data alpine sh
+Faites echo "hello" > /data/test.txt
+Puis docker rm -f id_du_conteneur
+Puis docker run -it -v monvolume:/data alpine sh
+Vous verrez que test.txt existe toujours.
