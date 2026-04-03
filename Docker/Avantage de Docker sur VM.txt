@@ -123,3 +123,8 @@ tester la communication avec docker exec -it site ping api
 Connecter et déconnecter un conteneur : 
 Ajouter un conteneur à un réseau existant : docker network connect monreseau site
 Le retirer : docker network disconnect monreseau site
+
+Dockerfile par l'exemple
+Qu'est ce qu'un Dockerfile? Un Dockerfile sert à automatiser la création d'images Docker
+Sans Dockerfile, on doit configurer son conteneur à la main (installer des paquets, copier des fichiers...)
+Avec un Dockerfile, Docker fait tout ça automatiquement dans une image réutilisable.
