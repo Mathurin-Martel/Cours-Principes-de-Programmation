@@ -128,3 +128,13 @@ Dockerfile par l'exemple
 Qu'est ce qu'un Dockerfile? Un Dockerfile sert à automatiser la création d'images Docker
 Sans Dockerfile, on doit configurer son conteneur à la main (installer des paquets, copier des fichiers...)
 Avec un Dockerfile, Docker fait tout ça automatiquement dans une image réutilisable.
+
+Structure générale d'un DockerFile
+Instruction          Rôle
+FROM                 Choisir l'image de base
+RUN                  Copier un fichier ou dossier local dans l'image
+COPY                 
+WORKDIR
+EXPOSE
+CMD/ENTRYPOINT
+
