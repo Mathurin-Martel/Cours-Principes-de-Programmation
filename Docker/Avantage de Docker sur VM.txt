@@ -79,3 +79,30 @@ Faites echo "hello" > /data/test.txt
 Puis docker rm -f id_du_conteneur
 Puis docker run -it -v monvolume:/data alpine sh
 Vous verrez que test.txt existe toujours.
+
+Partie Bind mounts : Monter un dossier de l'hôte
+docker run -it -v /home/user/projets:/app alpin sh
+Tout changement dans /home/user/projets se reflète dans /app
+Exemple concret : Faire persister une base de données SQL
+docker volume create mysql_data
+docker run -d-name mysql -e MYSQL_ROOT_PASSWORD=pass-b mysql_data:/var/lib/mysql mysqsl:8
+Reste à : Créer la base de données et y insérer les données
+          Arrêter le conteneur et exécuter un autre conteneur en partageant les données.
+          Vérifier que les données sont bien accessibles.
+
+Faire la même chose avec PostGreSQL
+
+Gestion des réseaux avec Docker
+docker network 
+
+Le réseau bridge est le réseau par défaut
+docker run -d --name web nginx
+Docker le met automatiquement dans bridge
+docker network inspect bridge
+
+Le réseau host :
+Le conteneur utilise le réseau directement du host
+Pas d'IP Docker, pas d'isolation
+docker run --network host nginx
+Ça ne fonctionne pas sur toutes les machies
+Pour quelle raison?
