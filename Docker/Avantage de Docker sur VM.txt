@@ -20,7 +20,9 @@ Le ":latest" signifie qu'au moment du téléchargement, c'était la dernière ve
 
 "docker run -it alpine:latest /bin/sh" lance un environnement linux minimal. On peut lancer ps mais pas nano par exemple.
 Pour installer curl dessus on lance apk add --no --cache curl.
-Si on exécute "exit" puis qu'on revient sur le conteneur, on peut se rendre compte que curl, ainsi que toutes les autres modifications qu'on aurait apportées, ont disparu.
+
+Si on exécute "exit" puis qu'on exécute de nouveau "docker run -it alpine:latest /bin/sh", on peut se rendre compte que curl, ainsi que toutes les autres modifications qu'on aurait apportées, ont disparu.
+C'est parce qu'on a créé un nouveau conteneur a partir de l'image
 Pour sauvegarder les modifications il faut lancer deux terminaux. 
 Sur le premier, on lance l'image avec docker run -it mon_image /bin/sh.
 Sur le second, on lance docker export ID_DU_CONTENEUR_EN_COURS_D'EXECUTION -o QUELQUE_CHOSE.tar
@@ -42,3 +44,28 @@ Si on fait exit sur ce conteneur ca ne stoppe pas la page internet. Il faut fair
 Si on relance le conteneur les modifications reste.
 
 La raison c'est que quand on run une image ca crée un NOUVEAU conteneur a partir de cette image mais si on run un CONTENEUR alors ca garde les modifications.
+
+Docker propose 3 types principaux :
+A.Bind mounts (montages liés)
+Ils relient un dossier de l'hôte à un dossier dans le conteneur.
+On voit les fichiers en temps réel.
+Dépend du système de fichiers hôte.
+Risque de sécurité si mal configuré.
+docker run -v source:destination image
+source est un chemin de la machine hôte
+destination se trouve dans le conteneur
+
+B..Volumes gérés par Docker
+Ce sont les volumes recommandés.
+Stockés dans /var/lib/docker/volumes/
+Indépendants du système hôte.
+Plus sûrs et facilement sauvegardables.
+docker volume create monvolume
+docker run-v monvolume:/chemin/image
+
+C.tmpfs (mémoire uniquement -Linux)
+Stockage temporaire uniquement en RAM
+Rapidité
+Aucune trace sur le disque
+Données perdues au redémarrage
+docker run -tmpfs /vhemin image
