@@ -1,50 +1,3 @@
--Portabilité : À partir d'une image je peux instancier plusieurs conteneurs. C'est la portabilité.
--L'isolation : Chaque conteneur va utiliser ses propres ressources. Contrairement à une virtualisation lourde, on peut étendre l'espace mémoire.
--Démarrage rapide : Pour démarrer la machine virtuelle c'est quelques minutes, pour lancer un conteneur c'est quelques secondes.
--Faciliter l'automatisation : 
--Coût réduit : C'est lié à la légèreté. Moins de ressources matérielles sont nécessaires pour 
--Compatibilité avec le Cloud : 
-
-LXC : Voir ce que ca veut dire.
-
-Une image contient le programme ainsi que l'environnement pouvant le faire tourner.
-
-Terminal :
-docker images : Listes les images sous forme de tableaux avec les colonnes suivantes : IMAGE, ID, DISK USAGE, CONTENT SIZE, EXTRA
-docker ps : Listes les conteneurs en cours d'éxécution sous forme de tableaux avec les colonnes suivantes : CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS, PORTS, NAMES
-docker ps -a : Liste tout les conteneurs, ceux encore en cours d'éxécution et ceux qui ont fini leur éxécution.
-docker run -it : run c'est pour exécuter. -it c'est pour que ce soit en mode interactive terminal
-docker run hello-world : Lors du premier lancement, docker ne connait pas l'image hello-world. Il va donc la télécharger depuis Internet. Il lance ensuite l'image hello-world. Au deuxième lancement, Docker n'a plus besoin de télécharger et exécute directement.
-Lorsqu'on exécute docker images une ligne dont la première valeur est hello-world:latest a été ajoutée.
-Le ":latest" signifie qu'au moment du téléchargement, c'était la dernière version de l'image.
-
-"docker run -it alpine:latest /bin/sh" lance un environnement linux minimal. On peut lancer ps mais pas nano par exemple.
-Pour installer curl dessus on lance apk add --no --cache curl.
-
-Si on exécute "exit" puis qu'on exécute de nouveau "docker run -it alpine:latest /bin/sh", on peut se rendre compte que curl, ainsi que toutes les autres modifications qu'on aurait apportées, ont disparu.
-C'est parce qu'on a créé un nouveau conteneur a partir de l'image
-Pour sauvegarder les modifications il faut lancer deux terminaux. 
-Sur le premier, on lance l'image avec docker run -it mon_image /bin/sh.
-Sur le second, on lance docker export ID_DU_CONTENEUR_EN_COURS_D'EXECUTION -o QUELQUE_CHOSE.tar
-On peut désormais lancer "exit" sur le premier terminal et "docker import QUELQUE_CHOSE.tar NOM_DE_L'IMAGE:VERSION_DE_L'IMAGE" (on peut mettre V1 par exemple).
-
-docker rm ID_OU_NOM_DU_CONTENEUR supprime le conteneur.
-docker rmi ID_OU_NOM_DE_L'IMAGE supprime l'image dont on a donné l'ID MAIS seulement si les conteneurs se servant de l'image ont été supprimés avant.
-
-docker run -d -p 8080:80 [--name monServeur] nginx. Lance une page internet sur http://localhost:8080/.
-[] veut dire optionnel, il faut les enlever quand on veut exécuter la commande.
--d : détaché
--p : port
-8080:80 = ma_machine:conteneur
-
-docker exec -it monServeur bash sert à lancer le conteneur où se trouve index.html
-Pour installer nano dessus, impossible de faire apk add --no -cache nano car il ne connait pas apk. Il faut faire apt update puis apt install nano.
-
-Si on fait exit sur ce conteneur ça ne stoppe pas la page internet. Il faut faire docker stop NOM_DU_CONTENEUR.
-Si on relance le conteneur, les modifications restent.
-
-La raison c'est que quand on run une image ça crée un NOUVEAU conteneur à partir de cette image mais si on run un CONTENEUR alors ça garde les modifications.
-
 Docker propose 3 types principaux :
 A.Bind mounts (montages liés)
 Ils relient un dossier de l'hôte à un dossier dans le conteneur.
@@ -92,38 +45,6 @@ Reste à : Créer la base de données et y insérer les données
 
 Faire la même chose avec PostGreSQL
 
-Gestion des réseaux avec Docker
-docker network 
-
-Le réseau bridge est le réseau par défaut
-docker run -d --name web nginx
-Docker le met automatiquement dans bridge
-docker network inspect bridge
-
-Le réseau host :
-Le conteneur utilise le réseau directement du host
-Pas d'IP Docker, pas d'isolation
-docker run --network host nginx
-Ça ne fonctionne pas sur toutes les machies
-Pour quelle raison?
-
-Le réseau none :
-Le conteneur ne peut communiquer avec aucun autre conteneur
-Aucun réseau, aucun accès
-docker run --network none -it alpine sh
-Lancer un ping www.google.com à l'intérieur du conteneur. Que remarquez-vous ? Que ça ne marche pas. Le conteneur ne peut, par Internet, recevoir de données de l'extérieur ou en envoyer.
-
-Le réseau personnalisé :
-Créer votre propre réseau.
-docker run -d --name site --network monreseau nginx
-docker run -d --name api --network monreseau alpine sleep 1000
-tester la communication avec docker exec -it site ping api
-(Ils se trouvent automatiquement grâce au DNS interne de Docker)
-
-Connecter et déconnecter un conteneur : 
-Ajouter un conteneur à un réseau existant : docker network connect monreseau site
-Le retirer : docker network disconnect monreseau site
-
 Dockerfile par l'exemple
 Qu'est ce qu'un Dockerfile? Un Dockerfile sert à automatiser la création d'images Docker
 Sans Dockerfile, on doit configurer son conteneur à la main (installer des paquets, copier des fichiers...)
@@ -136,16 +57,32 @@ RUN                  Exécuter une commande dans l'image
 COPY                 Copier un fichier ou dossier local dans l'image
 WORKDIR              Définir le dossier de travail
 EXPOSE               Documenter le port exposé
-CMD/ENTRYPOINT       Commande lancée au démrrage
+CMD/ENTRYPOINT       Commande lancée au démarrage
 
-Créer une image à partir d'une API REST :
-1. On utilise un image Python officielle : From python:3.12-slim
-2.On définit le répertoire de travail : WORKDIR /app
-3.On installe Flask : Run pip install flask
-4.On copie le fichier : COPY app.py
-5.On documente le port utilisé : EXPOSE 5000
-5.On définit la commande qui démarre l'application :
-CMD ["python", "app.py"]
-Vérifier si les crochets sont nécessaires.
+Créer une image à partir d'une API REST : 
+Étape 1 : Créer un Dockerfile dans votre projet Intellij. Il faut qu'il soit au même niveau que le dossier src.
+Étape 2 : Effacez toutes les instructions s'y trouvant et tapez celle-ci :
+FROM python:3.12-slim : On utilise un image Python officielle
+WORKDIR /app : On définit le répertoire de travail
+RUN pip install flask : On installe Flask
+COPY app.py . : On copie le fichier
+EXPOSE 5000 : On documente le port utilisé
+CMD ["python", "app.py"] : On définit la commande qui démarre l'application
 
-Ensuite on fait docker build -t mon-app et docker run -p 4900:5000
+Ensuite on fait "docker build -t mon-app ." et "docker run -p 4900:5000" dans le terminal d'Intellij
+
+>docker login
+>docker tag mon_apy username/mon_aapp:1
+>docker push username/mon_app:1
+
+Comment poster son image Docker?
+Allez sur Docker Hub.
+Puis sur terminal :
+docker login
+docker tag mon_app votre_username/mon_app
+docker push votre_username/mon_app:1
+
+Docker Compose :
+On peut avoir besoin de plusieurs services, par exemple un service php qui aurait besoin d'une API Rest.
+Voir les photos.
+Il faut mettre <M1> sinon il efface étudiants.
