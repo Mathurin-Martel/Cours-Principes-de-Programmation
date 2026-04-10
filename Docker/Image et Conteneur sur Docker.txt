@@ -1,0 +1,37 @@
+Une image contient le programme ainsi que l'environnement pouvant le faire tourner.
+
+Terminal :
+docker images : Listes les images sous forme de tableaux avec les colonnes suivantes : IMAGE, ID, DISK USAGE, CONTENT SIZE, EXTRA
+docker ps : Listes les conteneurs en cours d'éxécution sous forme de tableaux avec les colonnes suivantes : CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS, PORTS, NAMES
+docker ps -a : Liste tout les conteneurs, ceux encore en cours d'éxécution et ceux qui ont fini leur éxécution.
+docker run -it : run c'est pour exécuter. -it c'est pour que ce soit en mode interactive terminal
+docker run hello-world : Lors du premier lancement, docker ne connait pas l'image hello-world. Il va donc la télécharger depuis Internet. Il lance ensuite l'image hello-world. Au deuxième lancement, Docker n'a plus besoin de télécharger et exécute directement.
+Lorsqu'on exécute docker images une ligne dont la première valeur est hello-world:latest a été ajoutée.
+Le ":latest" signifie qu'au moment du téléchargement, c'était la dernière version de l'image.
+
+"docker run -it alpine:latest /bin/sh" lance un environnement linux minimal. On peut lancer ps mais pas nano par exemple.
+Pour installer curl dessus on lance apk add --no --cache curl.
+
+Si on exécute "exit" puis qu'on exécute de nouveau "docker run -it alpine:latest /bin/sh", on peut se rendre compte que curl, ainsi que toutes les autres modifications qu'on aurait apportées, ont disparu.
+C'est parce qu'on a créé un nouveau conteneur a partir de l'image
+Pour sauvegarder les modifications il faut lancer deux terminaux. 
+Sur le premier, on lance l'image avec docker run -it mon_image /bin/sh.
+Sur le second, on lance docker export ID_DU_CONTENEUR_EN_COURS_D'EXECUTION -o QUELQUE_CHOSE.tar
+On peut désormais lancer "exit" sur le premier terminal et "docker import QUELQUE_CHOSE.tar NOM_DE_L'IMAGE:VERSION_DE_L'IMAGE" (on peut mettre V1 par exemple).
+
+docker rm ID_OU_NOM_DU_CONTENEUR supprime le conteneur.
+docker rmi ID_OU_NOM_DE_L'IMAGE supprime l'image dont on a donné l'ID MAIS seulement si les conteneurs se servant de l'image ont été supprimés avant.
+
+docker run -d -p 8080:80 [--name monServeur] nginx. Lance une page internet sur http://localhost:8080/.
+[] veut dire optionnel, il faut les enlever quand on veut exécuter la commande.
+-d : détaché
+-p : port
+8080:80 = ma_machine:conteneur
+
+docker exec -it monServeur bash sert à lancer le conteneur où se trouve index.html
+Pour installer nano dessus, impossible de faire apk add --no -cache nano car il ne connait pas apk. Il faut faire apt update puis apt install nano.
+
+Si on fait exit sur ce conteneur ça ne stoppe pas la page internet. Il faut faire docker stop NOM_DU_CONTENEUR.
+Si on relance le conteneur, les modifications restent.
+
+La raison c'est que quand on run une image ça crée un NOUVEAU conteneur à partir de cette image mais si on run un CONTENEUR alors ça garde les modifications.
