@@ -147,3 +147,5 @@ Créer une image à partir d'une API REST :
 5.On définit la commande qui démarre l'application :
 CMD ["python", "app.py"]
 Vérifier si les crochets sont nécessaires.
+
+Ensuite on fait docker build -t mon-app et docker run -p 4900:5000
