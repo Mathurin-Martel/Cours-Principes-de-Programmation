@@ -1,0 +1,31 @@
+Gestion des réseaux avec Docker
+docker network 
+
+Le réseau bridge est le réseau par défaut
+docker run -d --name web nginx
+Docker le met automatiquement dans bridge
+docker network inspect bridge
+
+Le réseau host :
+Le conteneur utilise le réseau directement du host
+Pas d'IP Docker, pas d'isolation
+docker run --network host nginx
+Ça ne fonctionne pas sur toutes les machies
+Pour quelle raison?
+
+Le réseau none :
+Le conteneur ne peut communiquer avec aucun autre conteneur
+Aucun réseau, aucun accès
+docker run --network none -it alpine sh
+Lancer un ping www.google.com à l'intérieur du conteneur. Que remarquez-vous ? Que ça ne marche pas. Le conteneur ne peut, par Internet, recevoir de données de l'extérieur ou en envoyer.
+
+Le réseau personnalisé :
+Créer votre propre réseau.
+docker run -d --name site --network monreseau nginx
+docker run -d --name api --network monreseau alpine sleep 1000
+tester la communication avec docker exec -it site ping api
+(Ils se trouvent automatiquement grâce au DNS interne de Docker)
+
+Connecter et déconnecter un conteneur : 
+Ajouter un conteneur à un réseau existant : docker network connect monreseau site
+Le retirer : docker network disconnect monreseau site
