@@ -132,9 +132,18 @@ Avec un Dockerfile, Docker fait tout ça automatiquement dans une image réutili
 Structure générale d'un DockerFile
 Instruction          Rôle
 FROM                 Choisir l'image de base
-RUN                  Copier un fichier ou dossier local dans l'image
-COPY                 
-WORKDIR
-EXPOSE
-CMD/ENTRYPOINT
+RUN                  Exécuter une commande dans l'image
+COPY                 Copier un fichier ou dossier local dans l'image
+WORKDIR              Définir le dossier de travail
+EXPOSE               Documenter le port exposé
+CMD/ENTRYPOINT       Commande lancée au démrrage
 
+Créer une image à partir d'une API REST :
+1. On utilise un image Python officielle : From python:3.12-slim
+2.On définit le répertoire de travail : WORKDIR /app
+3.On installe Flask : Run pip install flask
+4.On copie le fichier : COPY app.py
+5.On documente le port utilisé : EXPOSE 5000
+5.On définit la commande qui démarre l'application :
+CMD ["python", "app.py"]
+Vérifier si les crochets sont nécessaires.
